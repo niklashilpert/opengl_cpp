@@ -5,7 +5,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(OpenGlLinkers -lGLU -lGL -lglfw)
 
-file (COPY ${CMAKE_CURRENT_SOURCE_DIR}/shaders/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/shaders/)
+file (COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/shaders/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources/shaders/)
+file (COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/textures/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources/textures/)
 
 add_executable(GL
         main.cpp
@@ -16,6 +17,9 @@ add_executable(GL
         window/window.cpp
         window/window.h
         glad/glad.c
+        gl/Texture.cpp
+        gl/Texture.h
+        io/stb_image.h
 )
 
 target_link_libraries(GL ${OpenGlLinkers})

@@ -1,6 +1,5 @@
 #include <cmath>
 #include <iostream>
-#include <ostream>
 #include <string>
 #include <cmath>
 
@@ -8,10 +7,15 @@
 #include <GLFW/glfw3.h>
 
 #include "window/window.h"
-#include "gl/Shader.h"
 
-const std::string VERTEX_SHADER_FILE = "shaders/shader.vert";
-const std::string FRAGMENT_SHADER_FILE = "shaders/shader.frag";
+#include "gl/Shader.h"
+#include "gl/Texture.h"
+
+const std::string SHADER_DIR = "resources/shaders/";
+const std::string TEXTURE_DIR = "resources/textures/";
+
+const std::string VERTEX_SHADER_FILE = SHADER_DIR + "shader.vert";
+const std::string FRAGMENT_SHADER_FILE = SHADER_DIR + "shader.frag";
 
 int test1() {
     if (!glfwInit()) {
@@ -34,8 +38,6 @@ int test1() {
          0.0f, -1.0f, 0.0f,  0.0f, 1.0f, 0.0f,  // b  - blue
          1.0f,  0.0f, 0.0f,  0.0f, 1.0f, 0.0f,  // r  - blue
         1.0f, -1.0f, 0.0f,  0.0f, 0.0f, 1.0f,  // br - green
-
-
     };
 
     const unsigned int top_left_square[] = {
@@ -107,7 +109,66 @@ int test1() {
     return 0;
 }
 
+int texture_test() {
+    if (!glfwInit()) {
+        fprintf(stderr, "Failed to initialize GLFW.\n");
+        return 1;
+    }
+
+    GLFWwindow *window = create_window(640, 640, "OpenGL - Test");
+    if (window == nullptr) {
+        return 1;
+    }
+
+    const std::vector wallVertices = {
+        Vertex {1,  1, 0.0f,  1, 1, 1,   1.0f, 1.0f},    // top right
+        Vertex {1, -1, 0.0f,   1, 1, 1,   1.0f, 0.0f},    // bottom right
+        Vertex {-1,  1, 0.0f,   1, 1, 1,  0.0f, 1.0f},   // top left
+        Vertex {-1, -1, 0.0f,   1, 1, 1,   0.0f, 0.0f},   // bottom left
+    };
+
+    const std::vector ballVertices = {
+        Vertex {0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   1.0f, 1.0f},    // top right
+        Vertex {0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f},    // bottom right
+        Vertex {-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f},   // top left
+        Vertex {-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f},   // bottom left
+    };
+
+    const std::vector<unsigned int> indices = {
+        0, 1, 3,
+        0, 2, 3,
+    };
+
+    const Texture wall("resources/textures/wall.png", wallVertices, indices, GL_RGB);
+    const Texture ball("resources/textures/basketball.png", ballVertices, indices, GL_RGBA);
+
+
+    while (!glfwWindowShouldClose(window)) {
+        glClearColor(1, 1, 1, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        const auto time = static_cast<float>(glfwGetTime());
+        const float x_offset = cosf(time * 3) / 3;
+        const float y_offset = sinf(time * 3) / 3;
+
+        ball.set_offset(x_offset, y_offset);
+
+        wall.draw();
+        ball.draw();
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    printf("Terminating...\n");
+
+    glfwDestroyWindow(window);
+    glfwTerminate();
+
+    return 0;
+}
+
 
 int main() {
-    test1();
+    texture_test();
 }

@@ -8,6 +8,8 @@
 
 class Shader {
 public:
+    unsigned int id;
+
     Shader(const std::string& vertex_path, const std::string& fragment_path);
     void use() const;
 
@@ -17,7 +19,6 @@ public:
     void setInt(const std::string& name, int value) const;
     void setFloat(const std::string& name, float value) const;
 private:
-    unsigned int id;
 };
 
 #endif //SHADER_H

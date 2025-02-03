@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <ostream>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "../io/io.h"
 
@@ -80,20 +81,29 @@ void Shader::use() const {
     glUseProgram(id);
 }
 
-void Shader::setFloat3(const std::string &name, float value1, float value2, float value3) const {
+void Shader::setFloat3(const std::string &name, const float value1, const float value2, const float value3) const {
+    use();
     glUniform3f(glGetUniformLocation(id, name.c_str()), value1, value2, value3);
 }
 
 void Shader::setBool(const std::string &name, const bool value) const {
+    use();
     glUniform1i(glGetUniformLocation(id, name.c_str()), static_cast<int>(value));
 }
 
 void Shader::setInt(const std::string &name, const int value) const {
+    use();
     glUniform1i(glGetUniformLocation(id, name.c_str()), value);
 }
 
 void Shader::setFloat(const std::string &name, const float value) const {
+    use();
     glUniform1f(glGetUniformLocation(id, name.c_str()), value);
+}
+
+void Shader::setMat4(const std::string &name, const glm::mat4 &value) const {
+    use();
+    glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, value_ptr(value));
 }
 
 

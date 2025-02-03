@@ -9,11 +9,11 @@
 
 #include "Shader.h"
 
-struct Vertex {
-  float x, y, z;
-  float r, g, b;
-  float tx, ty;
-};
+typedef struct Vertex {
+    float x, y, z;
+    float tx, ty;
+    float r = 1, g = 1, b = 1;
+} Vertex;
 
 class Texture {
 public:
@@ -22,13 +22,12 @@ public:
         const std::vector<Vertex> &vertices,
         const std::vector<unsigned int> &indices,
         int format,
-        float alpha_threshold = .1f
+        float alpha_threshold = .01f
         );
     void draw() const;
-    void set_offset(float x, float y) const;
-private:
+    void set_matrix(const std::string &name, const glm::mat4 &matrix) const;
     Shader shader = Shader("resources/shaders/default_texture.vert", "resources/shaders/default_texture.frag");
-	unsigned int texture;
+    unsigned int texture;
     unsigned int VBO;
     unsigned int VAO;
     unsigned int EBO;

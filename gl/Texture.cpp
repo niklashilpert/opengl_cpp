@@ -10,6 +10,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 
 #include "../io/stb_image.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/type_ptr.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 
 unsigned int prepare_texture(const std::string &path, const int format = GL_RGB) {
@@ -61,52 +64,55 @@ Texture::Texture(
   const int format,
   const float alpha_threshold
   ) {
-    VBO = 0;
-    VAO = 0;
-    EBO = 0;
+  VBO = 0;
+  VAO = 0;
+  EBO = 0;
 
-    indexCount = static_cast<int>(indices.size());
+  indexCount = static_cast<int>(indices.size());
 
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, static_cast<long>(vertices.size() * sizeof(Vertex)), vertices.data(), GL_STATIC_DRAW);
+  glGenBuffers(1, &VBO);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBufferData(GL_ARRAY_BUFFER, static_cast<long>(vertices.size() * sizeof(Vertex)), vertices.data(), GL_STATIC_DRAW);
 
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), static_cast<void *>(nullptr));
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
+  glGenVertexArrays(1, &VAO);
+  glBindVertexArray(VAO);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), static_cast<void *>(nullptr));
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(5 * sizeof(float)));
+  glEnableVertexAttribArray(2);
+  glGenBuffers(1, &EBO);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+  const long size = static_cast<long>(indices.size() * sizeof(unsigned int));
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices.data(), GL_STATIC_DRAW);
 
-    const long size = static_cast<long>(indices.size() * sizeof(unsigned int));
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices.data(), GL_STATIC_DRAW);
+  texture = prepare_texture(fileName, format);
+  glActiveTexture(GL_TEXTURE0);
 
-    texture = prepare_texture(fileName, format);
-    glActiveTexture(GL_TEXTURE0);
+  shader.use();
+  shader.setInt("texture0", 0);
+  shader.setFloat("alpha_threshold", alpha_threshold);
+  shader.setMat4("projection", glm::mat4(1.0f));
+  shader.setMat4("view", glm::mat4(1.0f));
+  shader.setMat4("model", glm::mat4(1.0f));
 
-    shader.use();
-    shader.setInt("texture0", 0);
-    shader.setFloat("alpha_threshold", alpha_threshold);
 }
 
 void Texture::draw() const {
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glActiveTexture(GL_TEXTURE0);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    shader.use();
-    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBindVertexArray(VAO);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glEnable(GL_DEPTH_TEST);
+  glActiveTexture(GL_TEXTURE0);
+  shader.use();
+  glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+  glDisable(GL_BLEND);
 }
 
-void Texture::set_offset(float x, float y) const {
-  shader.setFloat3("offset", x, y, 0);
+void Texture::set_matrix(const std::string &name, const glm::mat4 &matrix) const {
+  shader.setMat4(name, matrix);
 }
+

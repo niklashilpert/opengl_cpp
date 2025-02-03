@@ -2,10 +2,10 @@
 // Created by niklas on 30.01.25.
 //
 
+#include "window.h"
+
 #include <stdio.h>
 #include <string>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
 
 static void error_callback(int error, const char* description) {
@@ -14,6 +14,8 @@ static void error_callback(int error, const char* description) {
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
+    window_width = width;
+    window_height = height;
 }
 
 
@@ -44,6 +46,8 @@ GLFWwindow* create_window(const int width, const int height, const std::string &
     }
 
     glViewport(0, 0, width, height);
+    window_width = width;
+    window_height = height;
 
     return window;
 }

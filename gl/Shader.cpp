@@ -74,7 +74,10 @@ Shader::Shader(const std::string& vertex_path, const std::string& fragment_path)
         glGetProgramInfoLog(id, 512, nullptr, info_log);
         std::cerr << info_log << std::endl;
     }
+}
 
+Shader::~Shader() {
+    glDeleteProgram(id);
 }
 
 void Shader::use() const {
@@ -105,5 +108,4 @@ void Shader::setMat4(const std::string &name, const glm::mat4 &value) const {
     use();
     glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, value_ptr(value));
 }
-
 

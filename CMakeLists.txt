@@ -10,18 +10,16 @@ file (COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/ DESTINATION ${CMAKE_CURRENT_BI
 
 add_executable(GL
         main.cpp
-        gl/Shader.cpp
-        gl/Shader.h
+        glad/glad.c
+        io/stb_image.h
         io/io.cpp
         io/io.h
         window/window.cpp
         window/window.h
-        glad/glad.c
-        gl/Texture.cpp
+        gl/Shader.cpp
+        gl/Shader.h
         gl/Texture.h
-        io/stb_image.h
-        gl/CubeRenderer.cpp
-        gl/CubeRenderer.h
+        gl/Texture.cpp
         gl/Cube.cpp
         gl/Cube.h
 )

@@ -4,29 +4,50 @@
 
 #ifndef TEXTURE_H
 #define TEXTURE_H
+
 #include <string>
 #include <vector>
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
+#include "../io/stb_image.h"
 #include "Shader.h"
 
 typedef struct Vertex {
-    float x, y, z;
-    float tx, ty;
-    float r = 1, g = 1, b = 1;
+    glm::vec3 position;
+    glm::vec2 texCoord;
+    glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 } Vertex;
+
+typedef struct TextureInfo {
+    std::string file_path;
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
+} TextureInfo;
 
 class Texture {
 public:
-    Texture(
-        const std::string &fileName,
-        const std::vector<Vertex> &vertices,
-        const std::vector<unsigned int> &indices,
-        int format,
-        float alpha_threshold = .01f
+    static Shader *shader;
+
+
+    explicit Texture(
+        const TextureInfo& texture_info,
+        const glm::mat4 &transform = glm::mat4(1.0f),
+        int gl_format = GL_RGB,
+        int channel_count = STBI_rgb
         );
+    ~Texture();
+    void transform_texture(const glm::mat4 &transform, bool relative);
     void draw() const;
-    void set_matrix(const std::string &name, const glm::mat4 &matrix) const;
-    Shader shader = Shader("resources/shaders/default_texture.vert", "resources/shaders/default_texture.frag");
+private:
+    static unsigned int instance_count;
+    static void init_shader();
+    static void destroy_shader();
+
+    std::vector<Vertex> original_vertices;
+    glm::mat4 transform{};
+
     unsigned int texture;
     unsigned int VBO;
     unsigned int VAO;

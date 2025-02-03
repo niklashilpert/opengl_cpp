@@ -6,47 +6,48 @@
 
 #include <glad/glad.h>
 #include <glm/ext/matrix_transform.hpp>
+#include <utility>
 
-const std::vector front_vertices {
-    Vertex {.5, .5,  .5, 1.0f, 1.0f},
-    Vertex {-.5, .5,  .5, 0, 1.0f},
-    Vertex {.5, -.5,  .5, 1.0f, 0},
-    Vertex {-.5, -.5,  .5, 0, 0},
+const std::vector front_vertices{
+    Vertex{glm::vec3(.5f, .5f, .5f), glm::vec2(1, 1)},
+    Vertex{glm::vec3(-.5f, .5f, .5f), glm::vec2(0, 1)},
+    Vertex{glm::vec3(.5f, -.5f, .5f), glm::vec2(1, 0)},
+    Vertex{glm::vec3(-.5f, -.5f, .5f), glm::vec2(0, 0)},
 };
 
-const std::vector left_vertices {
-    Vertex {-.5, .5,  .5, 1.0f, 1.0f},
-    Vertex {-.5, .5,  -.5, 0, 1.0f},
-    Vertex {-.5, -.5,  .5, 1.0f, 0},
-    Vertex {-.5, -.5,  -.5, 0, 0}
+const std::vector left_vertices{
+    Vertex{glm::vec3(-.5f, .5f, .5f), glm::vec2(1, 1)},
+    Vertex{glm::vec3(-.5f, .5f, -.5f), glm::vec2(0, 1)},
+    Vertex{glm::vec3(-.5f, -.5f, .5f), glm::vec2(1, 0)},
+    Vertex{glm::vec3(-.5f, -.5f, -.5f), glm::vec2(0, 0)},
 };
 
-const std::vector top_vertices {
-    Vertex {.5, .5,  .5, 1.0f, 1.0f},
-    Vertex {.5, .5,  -.5, 0, 1.0f},
-    Vertex {-.5, .5,  .5, 1.0f, 0},
-    Vertex {-.5, .5,  -.5, 0, 0}
+const std::vector top_vertices{
+    Vertex{glm::vec3(.5f, .5f, .5f), glm::vec2(1, 1)},
+    Vertex{glm::vec3(.5f, .5f, -.5f), glm::vec2(0, 1)},
+    Vertex{glm::vec3(-.5f, .5f, .5f), glm::vec2(1, 0)},
+    Vertex{glm::vec3(-.5f, .5f, -.5f), glm::vec2(0, 0)},
 };
 
-const std::vector back_vertices {
-    Vertex {.5, .5,  -.5, 0, 1.0f},
-    Vertex {-.5, .5,  -.5, 1.0f, 1.0f},
-    Vertex {.5, -.5,  -.5, 0, 0},
-    Vertex {-.5, -.5,  -.5, 1.0f, 0},
+const std::vector back_vertices{
+    Vertex{glm::vec3(.5f, .5f, -.5f), glm::vec2(0, 1)},
+    Vertex{glm::vec3(-.5f, .5f, -.5f), glm::vec2(1, 1)},
+    Vertex{glm::vec3(.5f, -.5f, -.5f), glm::vec2(0, 0)},
+    Vertex{glm::vec3(-.5f, -.5f, -.5f), glm::vec2(1, 0)},
 };
 
-const std::vector right_vertices {
-    Vertex {.5, .5,  .5, 0, 1.0f},
-    Vertex {.5, .5,  -.5, 1.0f, 1.0f},
-    Vertex {.5, -.5,  .5, 0, 0},
-    Vertex {.5, -.5,  -.5, 1.0f, 0}
+const std::vector right_vertices{
+    Vertex{glm::vec3(.5f, .5f, .5f), glm::vec2(0, 1)},
+    Vertex{glm::vec3(.5f, .5f, -.5f), glm::vec2(1, 1)},
+    Vertex{glm::vec3(.5f, -.5f, .5f), glm::vec2(0, 0)},
+    Vertex{glm::vec3(.5f, -.5f, -.5f), glm::vec2(1, 0)},
 };
 
-const std::vector bottom_vertices {
-    Vertex {.5, -.5,  .5, 0, 1.0f},
-    Vertex {.5, -.5,  -.5, 1.0f, 1.0f},
-    Vertex {-.5, -.5,  .5, 0, 0},
-    Vertex {-.5, -.5,  -.5, 1.0f, 0}
+const std::vector bottom_vertices{
+    Vertex{glm::vec3(.5f, -.5f, .5f), glm::vec2(0, 1)},
+    Vertex{glm::vec3(.5f, -.5f, -.5f), glm::vec2(1, 1)},
+    Vertex{glm::vec3(-.5f, -.5f, .5f), glm::vec2(0, 0)},
+    Vertex{glm::vec3(-.5f, -.5f, -.5f), glm::vec2(1, 0)},
 };
 
 const std::vector<unsigned int> indices = {
@@ -54,77 +55,89 @@ const std::vector<unsigned int> indices = {
     0, 2, 3,
 };
 
+std::vector<Vertex> get_front_texture(const std::string &file_path, glm::mat4 &transform) {
+
+}
+
+
+
 typedef struct TexturePos {
     glm::vec3 position;
     Texture texture;
 } TexturePos;
 
 Cube::Cube(
-    const glm::mat4 &view_matrix,
-    const glm::mat4 &projection_matrix,
-    const std::string &front_resource,
-    const std::string &left_resource,
-    const std::string &right_resource,
-    const std::string &back_resource,
-    const std::string &top_resource,
-    const std::string &bottom_resource
-    ) : view_matrix(view_matrix),
-        projection_matrix(projection_matrix),
-        texture_front(front_resource, front_vertices, indices, GL_RGB),
-        texture_left(left_resource, left_vertices, indices, GL_RGB),
-        texture_right(right_resource, right_vertices, indices, GL_RGB),
-        texture_back(back_resource, back_vertices, indices, GL_RGB),
-        texture_top(top_resource, top_vertices, indices, GL_RGB),
-        texture_bottom(bottom_resource, bottom_vertices, indices, GL_RGB)
-{
-    texture_front.set_matrix("projection", projection_matrix);
-    texture_back.set_matrix("projection", projection_matrix);
-    texture_left.set_matrix("projection", projection_matrix);
-    texture_right.set_matrix("projection", projection_matrix);
-    texture_top.set_matrix("projection", projection_matrix);
-    texture_bottom.set_matrix("projection", projection_matrix);
-
-    texture_front.set_matrix("view", view_matrix);
-    texture_back.set_matrix("view", view_matrix);
-    texture_left.set_matrix("view", view_matrix);
-    texture_right.set_matrix("view", view_matrix);
-    texture_top.set_matrix("view", view_matrix);
-    texture_bottom.set_matrix("view", view_matrix);
+    const glm::mat4 &transform,
+    Texture *texture_front,
+    Texture *texture_back,
+    Texture *texture_left,
+    Texture *texture_right,
+    Texture *texture_top,
+    Texture *texture_bottom
+) : texture_front(texture_front),
+    texture_back(texture_back),
+    texture_left(texture_left),
+    texture_right(texture_right),
+    texture_top(texture_top),
+    texture_bottom(texture_bottom) {
+    transform_cube(transform, false);
 }
+
+Cube::~Cube() {
+    delete texture_front;
+    delete texture_back;
+    delete texture_left;
+    delete texture_right;
+    delete texture_top;
+    delete texture_bottom;
+}
+
+void Cube::transform_cube(const glm::mat4 &transform, const bool relative) {
+    texture_front->transform_texture(transform, relative);
+    texture_back->transform_texture(transform, relative);
+    texture_left->transform_texture(transform, relative);
+    texture_right->transform_texture(transform, relative);
+    texture_top->transform_texture(transform, relative);
+    texture_bottom->transform_texture(transform, relative);
+}
+
 
 void Cube::draw() const {
-    texture_front.draw();
-    texture_back.draw();
-    texture_left.draw();
-    texture_right.draw();
-    texture_top.draw();
-    texture_bottom.draw();
+    texture_front->draw();
+    texture_back->draw();
+    texture_left->draw();
+    texture_right->draw();
+    texture_top->draw();
+    texture_bottom->draw();
 }
 
-void Cube::set_view_matrix(const glm::mat4 &view) const {
-    texture_front.set_matrix("view", view);
-    texture_back.set_matrix("view", view);
-    texture_left.set_matrix("view", view);
-    texture_right.set_matrix("view", view);
-    texture_top.set_matrix("view", view);
-    texture_bottom.set_matrix("view", view);
+Cube make_grass(const glm::mat4 &transform) {
+    auto *front = new Texture(TextureInfo (GRASS_SIDE_PATH, front_vertices, indices), transform);
+    auto *back = new Texture(TextureInfo (GRASS_SIDE_PATH, back_vertices, indices), transform);
+    auto *left = new Texture(TextureInfo (GRASS_SIDE_PATH, left_vertices, indices), transform);
+    auto *right = new Texture(TextureInfo (GRASS_SIDE_PATH, right_vertices, indices), transform);
+    auto *top = new Texture(TextureInfo (GRASS_TOP_PATH, top_vertices, indices), transform);
+    auto *bottom = new Texture(TextureInfo (GRASS_BOTTOM_PATH, bottom_vertices, indices), transform);
+    return Cube(transform, front, back, left, right, top, bottom);
 }
 
-
-void Cube::set_model_matrix(const glm::mat4 &model) const{
-    texture_front.set_matrix("model", model);
-    texture_back.set_matrix("model", model);
-    texture_left.set_matrix("model", model);
-    texture_right.set_matrix("model", model);
-    texture_top.set_matrix("model", model);
-    texture_bottom.set_matrix("model", model);
+Cube make_default(const glm::mat4 &transform) {
+    auto *front = new Texture(TextureInfo (DEFAULT_CUBE_PATH, front_vertices, indices), transform);
+    auto *back = new Texture(TextureInfo (DEFAULT_CUBE_PATH, back_vertices, indices), transform);
+    auto *left = new Texture(TextureInfo (DEFAULT_CUBE_PATH, left_vertices, indices), transform);
+    auto *right = new Texture(TextureInfo (DEFAULT_CUBE_PATH, right_vertices, indices), transform);
+    auto *top = new Texture(TextureInfo (DEFAULT_CUBE_PATH, top_vertices, indices), transform);
+    auto *bottom = new Texture(TextureInfo (DEFAULT_CUBE_PATH, bottom_vertices, indices), transform);
+    return Cube(transform, front, back, left, right, top, bottom);
 }
 
-void Cube::set_projection_matrix(const glm::mat4 &projection) const {
-    texture_front.set_matrix("projection", projection);
-    texture_back.set_matrix("projection", projection);
-    texture_left.set_matrix("projection", projection);
-    texture_right.set_matrix("projection", projection);
-    texture_top.set_matrix("projection", projection);
-    texture_bottom.set_matrix("projection", projection);
+Cube make_brick(const glm::mat4 &transform) {
+    auto *front = new Texture(TextureInfo (BRICK_PATH, front_vertices, indices), transform);
+    auto *back = new Texture(TextureInfo (BRICK_PATH, back_vertices, indices), transform);
+    auto *left = new Texture(TextureInfo (BRICK_PATH, left_vertices, indices), transform);
+    auto *right = new Texture(TextureInfo (BRICK_PATH, right_vertices, indices), transform);
+    auto *top = new Texture(TextureInfo (BRICK_PATH, top_vertices, indices), transform);
+    auto *bottom = new Texture(TextureInfo (BRICK_PATH, bottom_vertices, indices), transform);
+    return Cube(transform, front, back, left, right, top, bottom);
 }
+

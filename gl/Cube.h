@@ -12,59 +12,38 @@ const std::string GRASS_BOTTOM_PATH = "resources/textures/grass/bottom.png";
 
 const std::string DEFAULT_CUBE_PATH = "resources/textures/default/default.png";
 
+const std::string BRICK_PATH = "resources/textures/wall.png";
+
 class Cube {
 public:
-    glm::mat4 view_matrix;
-    glm::mat4 projection_matrix;
-    const Texture texture_front;
-    const Texture texture_left;
-    const Texture texture_right;
-    const Texture texture_back;
-    const Texture texture_top;
-    const Texture texture_bottom;
-    Cube(
-        const glm::mat4 &view_matrix,
-        const glm::mat4 &projection_matrix,
-        const std::string &front_resource,
-        const std::string &left_resource,
-        const std::string &right_resource,
-        const std::string &back_resource,
-        const std::string &top_resource,
-        const std::string &bottom_resource
+    Texture *texture_front;
+    Texture *texture_back;
+    Texture *texture_left;
+    Texture *texture_right;
+    Texture *texture_top;
+    Texture *texture_bottom;
+
+    explicit Cube(
+        const glm::mat4 &transform,
+        Texture *texture_front,
+        Texture *texture_back,
+        Texture *texture_left,
+        Texture *texture_right,
+        Texture *texture_top,
+        Texture *texture_bottom
     );
+
+    ~Cube();
+
+    void transform_cube(const glm::mat4 &transform, bool relative);
+
     void draw() const;
-    void set_view_matrix(const glm::mat4 &view) const;
-    void set_model_matrix(const glm::mat4 &model) const;
-    void set_projection_matrix(const glm::mat4 &projection) const;
-
 };
 
-class GrassBlock : public Cube {
-public:
-    GrassBlock(const glm::mat4 &view_matrix, const glm::mat4 &projection_matrix) : Cube(
-        view_matrix,
-        projection_matrix,
-        GRASS_SIDE_PATH,
-        GRASS_SIDE_PATH,
-        GRASS_SIDE_PATH,
-        GRASS_SIDE_PATH,
-        GRASS_TOP_PATH,
-        GRASS_BOTTOM_PATH) {}
-};
+Cube make_grass(const glm::mat4 &transform);
 
-class DefaultCube : public Cube {
-public:
-    DefaultCube(const glm::mat4 &view_matrix, const glm::mat4 &projection_matrix) : Cube(
-        view_matrix,
-        projection_matrix,
-        DEFAULT_CUBE_PATH,
-        DEFAULT_CUBE_PATH,
-        DEFAULT_CUBE_PATH,
-        DEFAULT_CUBE_PATH,
-        DEFAULT_CUBE_PATH,
-        DEFAULT_CUBE_PATH) {}
-};
+Cube make_default(const glm::mat4 &transform);
 
-
+Cube make_brick(const glm::mat4 &transform);
 
 #endif //CUBE_H

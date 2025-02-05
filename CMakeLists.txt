@@ -22,6 +22,8 @@ add_executable(GL
         gl/Texture.cpp
         gl/Cube.cpp
         gl/Cube.h
+        gl/TextureInstance.cpp
+        gl/TextureInstance.h
 )
 
 target_link_libraries(GL ${OpenGlLinkers})

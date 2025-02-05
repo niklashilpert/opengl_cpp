@@ -6,6 +6,7 @@
 #define TEXTURE_H
 
 #include <string>
+#include <unordered_map>
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -14,45 +15,50 @@
 #include "../io/stb_image.h"
 #include "Shader.h"
 
-typedef struct Vertex {
-    glm::vec3 position;
-    glm::vec2 texCoord;
-    glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-} Vertex;
+namespace gl {
+    typedef struct Vertex {
+        glm::vec3 position;
+        glm::vec2 texCoord;
+        glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    } Vertex;
 
-typedef struct TextureInfo {
-    std::string file_path;
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
-} TextureInfo;
+    typedef struct TextureInfo {
+        std::string file_path;
+        std::vector<Vertex> vertices;
+        std::vector<unsigned int> indices;
+    } TextureInfo;
 
-class Texture {
-public:
-    static Shader *shader;
+    class Texture {
+    public:
+        explicit Texture(
+            const Shader *shader,
+            const TextureInfo& texture_info,
+            int gl_format = GL_RGB,
+            int channel_count = STBI_rgb
+            );
+        ~Texture();
 
+        void bind();
+        bool is_bound() const;
 
-    explicit Texture(
-        const TextureInfo& texture_info,
-        const glm::mat4 &transform = glm::mat4(1.0f),
-        int gl_format = GL_RGB,
-        int channel_count = STBI_rgb
-        );
-    ~Texture();
-    void transform_texture(const glm::mat4 &transform, bool relative);
-    void draw() const;
-private:
-    static unsigned int instance_count;
-    static void init_shader();
-    static void destroy_shader();
+    private:
+        static Texture *current;
 
-    std::vector<Vertex> original_vertices;
-    glm::mat4 transform{};
+        const Shader *shader;
+        const unsigned int texture;
+        const unsigned int VBO;
+        const unsigned int VAO;
+        const unsigned int EBO;
+        const int indexCount;
 
-    unsigned int texture;
-    unsigned int VBO;
-    unsigned int VAO;
-    unsigned int EBO;
-    int indexCount;
-};
+        friend class TextureInstance;
+    };
+
+    Texture *load_block(const Shader *shader, const std::string& file_path);
+    Texture *load_grass_block(const Shader *shader);
+    Texture *load_debug_block(const Shader *shader);
+    Texture *load_brick_block(const Shader *shader);
+
+}
 
 #endif //TEXTURE_H

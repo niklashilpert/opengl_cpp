@@ -16,6 +16,10 @@ namespace gl {
     const std::string CIRCLE_GEOMETRY_SHADER_FILE = "resources/shaders/circle/shader.geom";
     const std::string CIRCLE_FRAGMENT_SHADER_FILE = "resources/shaders/circle/shader.frag";
 
+    const std::string LINE_VERTEX_SHADER_FILE = "resources/shaders/line/shader.vert";
+    const std::string LINE_GEOMETRY_SHADER_FILE = "resources/shaders/line/shader.geom";
+    const std::string LINE_FRAGMENT_SHADER_FILE = "resources/shaders/line/shader.frag";
+
     class Shader {
     public:
         Shader(const std::vector<std::string> &paths);
@@ -35,6 +39,8 @@ namespace gl {
     Shader *loadTextureShader();
 
     Shader *loadCircleShader();
+
+    Shader *loadLineShader();
 }
 
 

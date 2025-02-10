@@ -139,4 +139,13 @@ namespace gl {
             }
         );
     }
+    Shader *loadLineShader() {
+        return new Shader(
+       {
+           LINE_VERTEX_SHADER_FILE,
+           LINE_GEOMETRY_SHADER_FILE,
+           LINE_FRAGMENT_SHADER_FILE
+           }
+       );
+    }
 }

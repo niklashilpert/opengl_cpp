@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include <string>
+#include <unistd.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -20,7 +21,11 @@ const std::string TEXTURE_DIR = "resources/textures/";
 const std::string VERTEX_SHADER_FILE = SHADER_DIR + "shader.vert";
 const std::string FRAGMENT_SHADER_FILE = SHADER_DIR + "shader.frag";
 
-
+struct Circle {
+glm::vec2 position;
+float radius;
+glm::vec3 color;
+};
 
 int main() {
     const Window window(800, 800, "OpenGL - Test");
@@ -29,10 +34,11 @@ int main() {
     shader->use();
 
     constexpr float vertices[] = {
-        0.5f, 0.5f, 0, 1, 1, .1f,
-        -0.5f, -0.5f, 1, 0, 1, .3f,
-        0.5f, -0.5f, 1, 1, 0, .2f,
-        -0.5f, 0.5f, 0, 1, 0, .4f,
+        0, 0, 1, 0, 1, 100,
+        0.5f, 0.5f, 0, 1, 1, 300,
+        -0.5f, -0.5f, 1, 0, 1, 80,
+        0.5f, -0.5f, 1, 1, 0, 60,
+        -0.5f, 0.5f, 0, 1, 0, 40,
     };
 
     unsigned int VBO, VAO;
@@ -49,10 +55,17 @@ int main() {
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
 
-    glDrawArrays(GL_POINTS, 0, 4);
-    window.updateBuffers();
 
     while (!window.should_close()) {
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        shader->setInt("screenWidth", window.get_width());
+        shader->setInt("screenHeight", window.get_height());
+
+        glDrawArrays(GL_POINTS, 0, 5);
+        window.updateBuffers();
+
         Window::updateEvents();
     }
 

@@ -36,6 +36,7 @@ public:
     [[nodiscard]] int get_height() const;
     [[nodiscard]] std::string get_title() const;
     [[nodiscard]] float get_aspect_ratio() const;
+    GLFWwindow *window;
 
 private:
     static int instance_count;
@@ -44,7 +45,6 @@ private:
 
     void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
-    GLFWwindow *window;
     std::string title;
     int width, height;
 };

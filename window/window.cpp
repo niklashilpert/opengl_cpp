@@ -41,9 +41,8 @@ Window::Window(
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+    window = glfwCreateWindow(1, 1, title.c_str(), nullptr, nullptr);
     if (!window) {
         throw std::runtime_error("Failed to create GLFW window");
     }
@@ -54,7 +53,6 @@ Window::Window(
     glfwSetFramebufferSizeCallback(window, [](GLFWwindow *window, const int w, const int h) {
         if (auto *window_pointer = static_cast<Window*>(glfwGetWindowUserPointer(window))) {
             window_pointer->framebuffer_size_callback(window, w, h);
-
         }
     });
     glfwMakeContextCurrent(window);
@@ -63,9 +61,8 @@ Window::Window(
         throw std::runtime_error("Failed to initialize GLAD");
     }
 
-    int w, h;
-    glfwGetWindowSize(window, &w, &h);
-    glViewport(0, 0, w, h);
+    glfwSetWindowSize(window, width, height);
+
 }
 
 Window::~Window() {

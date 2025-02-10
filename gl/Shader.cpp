@@ -7,33 +7,50 @@
 
 #include <iostream>
 #include <ostream>
+#include <vector>
 #include <glm/gtc/type_ptr.hpp>
 
 #include "../io/io.h"
 
 namespace gl {
-    std::string get_type_name(const int type) {
+    std::string getTypeName(const int type) {
         std::string type_name;
         switch (type) {
             case GL_VERTEX_SHADER:
                 type_name = "VERTEX";
-            break;
+                break;
             case GL_FRAGMENT_SHADER:
                 type_name = "FRAGMENT";
-            break;
+                break;
             case GL_GEOMETRY_SHADER:
                 type_name = "GEOMETRY";
-            break;
+                break;
             case GL_COMPUTE_SHADER:
                 type_name = "COMPUTE";
-            break;
+                break;
             default:
                 type_name = "UNKNOWN";
         }
         return type_name;
     }
 
-    unsigned int create_shader(const int type, const std::string &source) {
+    int getType(const std::string &path) {
+        if (path.ends_with(".vert")) {
+            return GL_VERTEX_SHADER;
+        }
+        if (path.ends_with(".frag")) {
+            return GL_FRAGMENT_SHADER;
+        }
+        if (path.ends_with(".geom")) {
+            return GL_GEOMETRY_SHADER;
+        }
+        if (path.ends_with(".comp")) {
+            return GL_COMPUTE_SHADER;
+        }
+        throw std::runtime_error("Unknown shader type: " + path);
+    }
+
+    unsigned int createShader(const int type, const std::string &source) {
         const unsigned int shader = glCreateShader(type);
 
         const char *c_source = source.c_str();
@@ -43,7 +60,7 @@ namespace gl {
         int success;
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
         if (!success) {
-            std::cerr << "ERROR::SHADER::" << get_type_name(type) << "::COMPILATION_FAILED" << std::endl;
+            std::cerr << "ERROR::SHADER::" << getTypeName(type) << "::COMPILATION_FAILED" << std::endl;
             char infoLog[512];
             glGetShaderInfoLog(shader, 512, nullptr, infoLog);
             std::cerr << infoLog << std::endl;
@@ -54,17 +71,15 @@ namespace gl {
     }
 
 
-    Shader::Shader(const std::string& vertex_path, const std::string& fragment_path) {
-        const std::string vertex_source = read_file(vertex_path);
-        const std::string fragment_source = read_file(fragment_path);
-        const unsigned int vertex_id = create_shader(GL_VERTEX_SHADER, vertex_source);
-        const unsigned int fragment_id = create_shader(GL_FRAGMENT_SHADER, fragment_source);
-
+    Shader::Shader(const std::vector<std::string> &paths) {
         id = glCreateProgram();
-        glAttachShader(id, vertex_id);
-        glAttachShader(id, fragment_id);
-        glDeleteShader(vertex_id);
-        glDeleteShader(fragment_id);
+
+        for (const auto &path: paths) {
+            const std::string source = readFile(path);
+            const unsigned int shader_id = createShader(getType(path), source);
+            glAttachShader(id, shader_id);
+            glDeleteShader(shader_id);
+        }
         glLinkProgram(id);
 
         int success;
@@ -111,7 +126,17 @@ namespace gl {
     }
 
 
-    Shader *load_texture_shader() {
-        return new Shader(TEXTURE_VERTEX_SHADER_FILE, TEXTURE_FRAGMENT_SHADER_FILE);
+    Shader *loadTextureShader() {
+        return new Shader({TEXTURE_VERTEX_SHADER_FILE, TEXTURE_FRAGMENT_SHADER_FILE});
+    }
+
+    Shader *loadCircleShader() {
+        return new Shader(
+        {
+            CIRCLE_VERTEX_SHADER_FILE,
+            CIRCLE_GEOMETRY_SHADER_FILE,
+            CIRCLE_FRAGMENT_SHADER_FILE
+            }
+        );
     }
 }

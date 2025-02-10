@@ -7,7 +7,7 @@
 #include <sstream>
 
 
-std::string read_file(const std::string &filename) {
+std::string readFile(const std::string &filename) {
     std::ifstream file;
     file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     std::string content;

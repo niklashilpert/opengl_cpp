@@ -63,7 +63,9 @@ Window::Window(
         throw std::runtime_error("Failed to initialize GLAD");
     }
 
-    glViewport(0, 0, width, height);
+    int w, h;
+    glfwGetWindowSize(window, &w, &h);
+    glViewport(0, 0, w, h);
 }
 
 Window::~Window() {

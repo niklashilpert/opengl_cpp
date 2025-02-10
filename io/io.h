@@ -5,6 +5,6 @@
 #ifndef IO_H
 #define IO_H
 
-std::string read_file(const std::string &filename);
+std::string readFile(const std::string &filename);
 
 #endif //IO_H

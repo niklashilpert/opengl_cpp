@@ -3,7 +3,7 @@ project(GL)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(OpenGlLinkers -lGLU -lGL -lglfw)
+set(OpenGlLinkers -lGL -lglfw)
 
 file (COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources/)
 
@@ -24,6 +24,7 @@ add_executable(GL
         gl/Cube.h
         gl/TextureInstance.cpp
         gl/TextureInstance.h
+        gl/CubeRenderer.h
 )
 
 target_link_libraries(GL ${OpenGlLinkers})

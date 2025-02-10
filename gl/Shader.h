@@ -5,15 +5,20 @@
 #ifndef SHADER_H
 #define SHADER_H
 #include <string>
+#include <vector>
 #include <glm/glm.hpp>
 
 namespace gl {
     const std::string TEXTURE_VERTEX_SHADER_FILE = "resources/shaders/default_texture.vert";
     const std::string TEXTURE_FRAGMENT_SHADER_FILE = "resources/shaders/default_texture.frag";
 
+    const std::string CIRCLE_VERTEX_SHADER_FILE = "resources/shaders/circle/shader.vert";
+    const std::string CIRCLE_GEOMETRY_SHADER_FILE = "resources/shaders/circle/shader.geom";
+    const std::string CIRCLE_FRAGMENT_SHADER_FILE = "resources/shaders/circle/shader.frag";
+
     class Shader {
     public:
-        Shader(const std::string& vertex_path, const std::string& fragment_path);
+        Shader(const std::vector<std::string> &paths);
         ~Shader();
         void use() const;
 
@@ -27,8 +32,9 @@ namespace gl {
         unsigned int id;
     };
 
-    Shader *load_texture_shader();
+    Shader *loadTextureShader();
 
+    Shader *loadCircleShader();
 }
 
 

@@ -27,7 +27,7 @@ vec2 toGLCoords(vec2 coords) {
 void main()
 {
     vec2 direction = inPosition2 - inPosition1;
-    vec2 orth = normalize(vec2(-direction.y, direction.x)) * inWidth;
+    vec2 orth = normalize(vec2(-direction.y, direction.x)) * inWidth / 2;
     vec2 sampleCornerPos = inPosition1 + orth;
 
     vPos1 = toGLCoords(toRelativeCoords(inPosition1));
